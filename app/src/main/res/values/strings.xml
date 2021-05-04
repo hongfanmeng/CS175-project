@@ -5,4 +5,13 @@
     <string name="camera">相机</string>
     <string name="upload">上传</string>
     <string name="home">首页</string>
+    <string name="select">选取影片</string>
+    <string name="reselect">重选</string>
+    <string name="next">下一步</string>
+    <string name="prev">上一步</string>
+    <string name="choose_cover">选择封面</string>
+    <string name="manual">手动选择</string>
+    <string name="auto">自动生成</string>
+    <string name="preview">预览</string>
+    <string name="cover">封面</string>
 </resources>

@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.widget.ImageButton;
 
 
 import com.google.android.material.button.MaterialButton;
@@ -47,6 +48,9 @@ public class CameraActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.hide();
         }
+
+        ImageButton closeButton = findViewById(R.id.btn_close);
+        closeButton.setOnClickListener(view -> finish());
 
         mPreviewView = findViewById(R.id.preview_view);
         mRecordButton = findViewById(R.id.btn_record);
