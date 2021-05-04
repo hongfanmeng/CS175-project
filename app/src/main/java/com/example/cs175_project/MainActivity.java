@@ -13,18 +13,23 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationItemView;
+import com.google.android.material.internal.NavigationMenuItemView;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private final static int PERMISSION_REQUEST_RECORD_CODE = 1001;
-    private boolean mHasRecordPermission = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        BottomNavigationItemView navRecord = findViewById(R.id.nav_record);
+        navRecord.setOnClickListener(this::requestRecordPermission);
+
     }
 
     public void requestRecordPermission(View view) {

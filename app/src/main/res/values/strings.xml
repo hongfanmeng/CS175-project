@@ -3,4 +3,6 @@
     <string name="take_photo">拍照</string>
     <string name="record">录制</string>
     <string name="camera">相机</string>
+    <string name="upload">上传</string>
+    <string name="home">首页</string>
 </resources>

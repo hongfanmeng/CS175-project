@@ -16,37 +16,65 @@ import androidx.core.content.ContextCompat;
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.View;
 
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import java.util.concurrent.Executors;
 
 public class CameraActivity extends AppCompatActivity {
     final static String TAG = "CameraActivity";
+    final static long TOTAL_TIME = 10000;
+    private long startTime;
     private PreviewView mPreviewView;
+    private MaterialButton mRecordButton;
+    private LinearProgressIndicator mProgress;
     private CameraController mController;
     private OutputFileOptions mOptions;
-    private MaterialButton mRecordButton;
+    private Handler mHandler;
+    private Runnable mRunnable;
 
     @Override
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.hide();
+        if (actionBar != null) {
+            actionBar.hide();
+        }
 
         mPreviewView = findViewById(R.id.preview_view);
         mRecordButton = findViewById(R.id.btn_record);
+        mProgress = findViewById(R.id.progress);
+        mHandler = new Handler();
         setupController();
         setupOutput();
+        setupHandler();
         setButtonStartRecord();
     }
+
+    private void setupHandler() {
+        mHandler = new Handler();
+        mRunnable = new Runnable() {
+            @Override
+            public void run() {
+                long duration = System.currentTimeMillis() - startTime;
+                if (duration >= TOTAL_TIME) {
+                    runOnUiThread(() -> mProgress.setProgress(100));
+                    stopRecord();
+                    return;
+                }
+                runOnUiThread(() -> mProgress.setProgress((int) (duration * 100 / TOTAL_TIME), true));
+                mHandler.postDelayed(this, 100);
+            }
+        };
+    }
+
 
     private void setButtonStartRecord() {
         mRecordButton.setOnClickListener(view -> startRecord());
@@ -100,9 +128,15 @@ public class CameraActivity extends AppCompatActivity {
                 }
         );
         setButtonStopRecord();
+        startTime = System.currentTimeMillis();
+        mHandler.post(mRunnable);
     }
 
+    @SuppressLint("UnsafeOptInUsageError")
     private void stopRecord() {
+        mHandler.removeCallbacks(mRunnable);
+        runOnUiThread(() -> mProgress.setProgress(0));
+        mController.stopRecording();
         setButtonStartRecord();
     }
 
