@@ -20,7 +20,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 
 import com.google.android.material.button.MaterialButton;
@@ -127,11 +129,13 @@ public class CameraActivity extends AppCompatActivity {
                         Intent intent = new Intent(CameraActivity.this, UploadPreviewActivity.class);
                         intent.putExtra("videoUri", outputFileResults.getSavedUri().toString());
                         startActivity(intent);
+                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                     }
 
                     @Override
                     public void onError(int videoCaptureError, @NonNull String message, @Nullable Throwable cause) {
-                        Log.d(TAG, message);
+                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                        Toast.makeText(CameraActivity.this, message, Toast.LENGTH_SHORT).show();
                     }
                 }
         );
@@ -142,6 +146,8 @@ public class CameraActivity extends AppCompatActivity {
 
     @SuppressLint("UnsafeOptInUsageError")
     private void stopRecord() {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         mHandler.removeCallbacks(mRunnable);
         runOnUiThread(() -> mProgress.setProgress(0));
         setButtonStartRecord();

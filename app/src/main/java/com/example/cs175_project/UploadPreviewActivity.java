@@ -1,6 +1,9 @@
 package com.example.cs175_project;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -60,6 +63,7 @@ public class UploadPreviewActivity extends AppCompatActivity {
     }
 
     private void playVideo(Uri uri) {
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
         MediaItem mediaItem = MediaItem.fromUri(uri);
         mPlayer.setMediaItem(mediaItem);
         mPlayer.prepare();

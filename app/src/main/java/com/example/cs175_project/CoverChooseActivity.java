@@ -101,16 +101,7 @@ public class CoverChooseActivity extends AppCompatActivity {
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         mmr.setDataSource(this, mVideoUri);
         Bitmap bmp = mmr.getFrameAtTime();
-
-        int videoWidth = bmp.getWidth();
-        int videoHeight = bmp.getHeight();
-
-        if (videoWidth > videoHeight) {
-            this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        }
-        if (videoWidth < videoHeight) {
-            this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        }
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
         return bmp;
     }
 
