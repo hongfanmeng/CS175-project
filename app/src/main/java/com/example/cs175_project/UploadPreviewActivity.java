@@ -30,6 +30,7 @@ public class UploadPreviewActivity extends AppCompatActivity {
     ImageButton mPrevButton, mNextButton;
     private PlayerView mPlayerView;
     SimpleExoPlayer mPlayer;
+    Uri mVideoUri;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,10 +46,7 @@ public class UploadPreviewActivity extends AppCompatActivity {
         mNextButton = findViewById(R.id.btn_next);
 
         mPrevButton.setOnClickListener(view -> finish());
-        mNextButton.setOnClickListener((view) -> {
-            startActivity(new Intent(UploadPreviewActivity.this, CoverChooseActivity.class));
-            overridePendingTransition(0, 0);
-        });
+        mNextButton.setOnClickListener((view) -> nextStep());
 
         mPlayerView = findViewById(R.id.video_view);
         mPlayer = new SimpleExoPlayer.Builder(this).build();
@@ -62,8 +60,8 @@ public class UploadPreviewActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_TAKE_GALLERY_VIDEO) {
-                Uri selectedVideoUri = data.getData();
-                playVideo(selectedVideoUri);
+                mVideoUri = data.getData();
+                playVideo(mVideoUri);
             }
         }
     }
@@ -82,6 +80,9 @@ public class UploadPreviewActivity extends AppCompatActivity {
     }
 
     private void nextStep() {
-
+        Intent intent = new Intent(UploadPreviewActivity.this, CoverChooseActivity.class);
+        intent.putExtra("videoUri", mVideoUri.toString());
+        startActivity(intent);
+        overridePendingTransition(0, 0);
     }
 }
