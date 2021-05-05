@@ -14,4 +14,7 @@
     <string name="auto">自动生成</string>
     <string name="preview">预览</string>
     <string name="cover">封面</string>
+    <string name="uplaod_success">上传成功</string>
+    <string name="upload_fail">上传失败</string>
+    <string name="uploading">上传中</string>
 </resources>

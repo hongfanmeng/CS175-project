@@ -1,6 +1,7 @@
 package com.example.cs175_project;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -11,13 +12,14 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
-import com.google.android.material.bottomnavigation.BottomNavigationMenu;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -26,6 +28,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private final static int RECORD_PERMISSION_REQUEST_CODE = 1001;
+    private final static int REQUEST_TAKE_GALLERY_VIDEO = 1002;
     private final static String TAG = "MainActivity";
 
     @Override
@@ -43,9 +46,7 @@ public class MainActivity extends AppCompatActivity {
         navRecord.setOnClickListener(this::requestRecordPermission);
 
         BottomNavigationItemView navUpload = findViewById(R.id.nav_upload);
-        navUpload.setOnClickListener((view) -> {
-            startActivity(new Intent(MainActivity.this, UploadPreviewActivity.class));
-        });
+        navUpload.setOnClickListener((view) -> videoSelect());
 
 
         BottomNavigationView navigation = findViewById(R.id.bottom_navigation);
@@ -118,5 +119,22 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
+    private void videoSelect() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("video/*");
+        startActivityForResult(Intent.createChooser(intent, "Select Video"), REQUEST_TAKE_GALLERY_VIDEO);
+    }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_TAKE_GALLERY_VIDEO) {
+                Uri uri = data.getData();
+                Intent intent = new Intent(MainActivity.this, UploadPreviewActivity.class);
+                intent.putExtra("videoUri", uri.toString());
+                startActivity(intent);
+            }
+        }
+    }
 }

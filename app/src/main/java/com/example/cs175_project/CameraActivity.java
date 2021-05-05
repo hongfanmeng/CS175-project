@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -123,6 +124,9 @@ public class CameraActivity extends AppCompatActivity {
                     @Override
                     public void onVideoSaved(@NonNull OutputFileResults outputFileResults) {
                         Log.d(TAG, "onSaved");
+                        Intent intent = new Intent(CameraActivity.this, UploadPreviewActivity.class);
+                        intent.putExtra("videoUri", outputFileResults.getSavedUri().toString());
+                        startActivity(intent);
                     }
 
                     @Override
@@ -140,8 +144,8 @@ public class CameraActivity extends AppCompatActivity {
     private void stopRecord() {
         mHandler.removeCallbacks(mRunnable);
         runOnUiThread(() -> mProgress.setProgress(0));
-        mController.stopRecording();
         setButtonStartRecord();
+        mController.stopRecording();
     }
 
 
