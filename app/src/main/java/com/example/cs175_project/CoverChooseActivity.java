@@ -101,7 +101,6 @@ public class CoverChooseActivity extends AppCompatActivity {
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         mmr.setDataSource(this, mVideoUri);
         Bitmap bmp = mmr.getFrameAtTime();
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
         return bmp;
     }
 
@@ -153,7 +152,7 @@ public class CoverChooseActivity extends AppCompatActivity {
             @Override
             public void onFailure(final Call<UploadResponse> call, final Throwable t) {
                 t.printStackTrace();
-                Toast.makeText(CoverChooseActivity.this, getString(R.string.upload_fail) + t.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(CoverChooseActivity.this, getString(R.string.upload_fail), Toast.LENGTH_SHORT).show();
                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 setLoadingScreen(false);
             }

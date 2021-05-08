@@ -6,21 +6,21 @@ import java.util.Date;
 
 public class VideoResult {
     @SerializedName("_id")
-    private String Id;
+    public String Id;
     @SerializedName("student_id")
-    private String studentId;
+    public String studentId;
     @SerializedName("user_name")
-    private String userName;
+    public String userName;
     @SerializedName("video_url")
-    private String videoUrl;
+    public String videoUrl;
     @SerializedName("image_url")
-    private String imageUrl;
+    public String imageUrl;
     @SerializedName("image_w")
-    private int imageW;
+    public int imageW;
     @SerializedName("image_h")
-    private int imageH;
+    public int imageH;
     @SerializedName("createdAt")
-    private Date createdAt;
+    public Date createdAt;
     @SerializedName("updatedAt")
-    private Date updatedAt;
+    public Date updatedAt;
 }

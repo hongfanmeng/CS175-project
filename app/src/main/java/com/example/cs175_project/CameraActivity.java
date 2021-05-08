@@ -146,6 +146,11 @@ public class CameraActivity extends AppCompatActivity {
 
     @SuppressLint("UnsafeOptInUsageError")
     private void stopRecord() {
+        long duration = System.currentTimeMillis() - startTime;
+        if (duration < 1000) {
+            Toast.makeText(this, R.string.at_least_1s, Toast.LENGTH_SHORT).show();
+            return;
+        }
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         mHandler.removeCallbacks(mRunnable);

@@ -1,34 +1,30 @@
 package com.example.cs175_project;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.graphics.Bitmap;
-import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageButton;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.ui.PlayerView;
 
-public class UploadPreviewActivity extends AppCompatActivity {
+public class VideoActivity extends AppCompatActivity {
 
-    final static int REQUEST_COVER_CHOOSE = 1001;
-    private final static String TAG = "UploadPreviewActivity";
-    ImageButton mPrevButton, mNextButton;
+    private final static String TAG = "VideoActivity";
+    ImageButton mPrevButton;
     SimpleExoPlayer mPlayer;
     Uri mVideoUri;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_upload_preview);
+        setContentView(R.layout.activity_video);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -36,10 +32,7 @@ public class UploadPreviewActivity extends AppCompatActivity {
         }
 
         mPrevButton = findViewById(R.id.btn_prev);
-        mNextButton = findViewById(R.id.btn_next);
-
         mPrevButton.setOnClickListener(view -> finish());
-        mNextButton.setOnClickListener((view) -> nextStep());
 
         PlayerView playerView = findViewById(R.id.video_view);
         mPlayer = new SimpleExoPlayer.Builder(this).build();
@@ -51,29 +44,11 @@ public class UploadPreviewActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_COVER_CHOOSE) {
-                Log.d(TAG, "UploadFinish");
-                finish();
-            }
-        }
-    }
-
     private void playVideo(Uri uri) {
         MediaItem mediaItem = MediaItem.fromUri(uri);
         mPlayer.setMediaItem(mediaItem);
         mPlayer.prepare();
         mPlayer.play();
-    }
-
-    private void nextStep() {
-        Intent intent = new Intent(UploadPreviewActivity.this, CoverChooseActivity.class);
-        intent.putExtra("videoUri", mVideoUri.toString());
-        startActivityForResult(intent, REQUEST_COVER_CHOOSE);
-        overridePendingTransition(0, 0);
     }
 
     @Override
