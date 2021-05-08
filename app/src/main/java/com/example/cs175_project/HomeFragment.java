@@ -7,9 +7,11 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +21,7 @@ import android.widget.Toast;
 
 import com.example.cs175_project.model.GetResponse;
 import com.example.cs175_project.model.VideoResult;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +38,8 @@ public class HomeFragment extends Fragment {
     private static final String TAG = "HomeFragment";
     private RecyclerView mRecyclerview;
     private VideoAdapter mVideoAdapter;
+    private FloatingActionButton mScrollTopButton;
+    private boolean fetchStatus;
     IApi api;
 
     public static HomeFragment newInstance() {
@@ -54,9 +59,40 @@ public class HomeFragment extends Fragment {
 
         initNetwork();
         mVideoAdapter = new VideoAdapter(new ArrayList<>());
-        List<VideoItem> videos = fetchVideoList();
+        fetchVideoList();
+
+        mScrollTopButton = getActivity().findViewById(R.id.btn_scroll_top);
+        mScrollTopButton.setVisibility(View.GONE);
+        mScrollTopButton.setOnClickListener((view) -> {
+            mRecyclerview.smoothScrollToPosition(0);
+            Handler handler = new Handler();
+            handler.postDelayed(() -> mRecyclerview.scrollToPosition(0), 500);
+        });
+
         mRecyclerview.setAdapter(mVideoAdapter);
         mRecyclerview.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        mRecyclerview.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    mScrollTopButton.setVisibility(View.GONE);
+                    if (!mRecyclerview.canScrollVertically(-1)) {
+                        if (!fetchStatus) fetchVideoList();
+                    }
+                }
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy < -200) {
+                    mScrollTopButton.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+
     }
 
     private void initNetwork() {
@@ -67,11 +103,14 @@ public class HomeFragment extends Fragment {
         api = retrofit.create(IApi.class);
     }
 
-    List<VideoItem> fetchVideoList() {
+    private void fetchVideoList() {
+        fetchStatus = true;
         Call<GetResponse> resp = api.getVideo();
         resp.enqueue(new Callback<GetResponse>() {
             @Override
             public void onResponse(final Call<GetResponse> call, final Response<GetResponse> response) {
+                fetchStatus = false;
+                getActivity().findViewById(R.id.layout_loading).setVisibility(View.GONE);
                 if (!response.isSuccessful()) return;
                 List<VideoResult> results = response.body().feeds;
                 List<VideoItem> videos = results.stream().map((VideoResult result) -> {
@@ -85,11 +124,12 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(final Call<GetResponse> call, final Throwable t) {
+                fetchStatus = false;
                 t.printStackTrace();
+                Toast.makeText(getActivity(), R.string.loading_fail, Toast.LENGTH_SHORT).show();
                 Log.d(TAG, t.toString());
             }
         });
-        return null;
     }
 
 }

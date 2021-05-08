@@ -35,6 +35,7 @@ public class VideoActivity extends AppCompatActivity {
         mPrevButton.setOnClickListener(view -> finish());
 
         PlayerView playerView = findViewById(R.id.video_view);
+        playerView.setControllerAutoShow(false);
         mPlayer = new SimpleExoPlayer.Builder(this).build();
         playerView.setPlayer(mPlayer);
 

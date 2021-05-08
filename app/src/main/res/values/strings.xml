@@ -18,4 +18,6 @@
     <string name="upload_fail">上传失败</string>
     <string name="uploading">上传中</string>
     <string name="at_least_1s">录制时间最小为1秒</string>
+    <string name="loading">加载中</string>
+    <string name="loading_fail">加载失败</string>
 </resources>
