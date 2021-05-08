@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationItemView navUpload = findViewById(R.id.nav_upload);
         navUpload.setOnClickListener((view) -> videoSelect());
 
-
         BottomNavigationView navigation = findViewById(R.id.bottom_navigation);
         navigation.setOnNavigationItemSelectedListener(this::onNavigationItemSelected);
         navigation.setOnNavigationItemReselectedListener((view) -> {

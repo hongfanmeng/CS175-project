@@ -1,23 +1,19 @@
 package com.example.cs175_project;
 
-import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
-
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.example.cs175_project.model.GetResponse;
 import com.example.cs175_project.model.VideoResult;
@@ -64,6 +60,7 @@ public class HomeFragment extends Fragment {
         mScrollTopButton = getActivity().findViewById(R.id.btn_scroll_top);
         mScrollTopButton.setVisibility(View.GONE);
         mScrollTopButton.setOnClickListener((view) -> {
+            mScrollTopButton.setVisibility(View.GONE);
             mRecyclerview.smoothScrollToPosition(0);
             Handler handler = new Handler();
             handler.postDelayed(() -> mRecyclerview.scrollToPosition(0), 500);
