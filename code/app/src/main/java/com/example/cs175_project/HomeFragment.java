@@ -35,6 +35,7 @@ public class HomeFragment extends Fragment {
     private RecyclerView mRecyclerview;
     private VideoAdapter mVideoAdapter;
     private FloatingActionButton mScrollTopButton;
+    private View mLoadingLayout;
     private boolean fetchStatus;
     IApi api;
 
@@ -52,6 +53,8 @@ public class HomeFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mRecyclerview = getActivity().findViewById(R.id.recycler_view);
+
+        mLoadingLayout = getActivity().findViewById(R.id.layout_loading);
 
         initNetwork();
         mVideoAdapter = new VideoAdapter(new ArrayList<>());
@@ -107,7 +110,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onResponse(final Call<GetResponse> call, final Response<GetResponse> response) {
                 fetchStatus = false;
-                getActivity().findViewById(R.id.layout_loading).setVisibility(View.GONE);
+                getActivity().runOnUiThread(() -> mLoadingLayout.setVisibility(View.GONE));
                 if (!response.isSuccessful()) return;
                 List<VideoResult> results = response.body().feeds;
                 List<VideoItem> videos = results.stream().map((VideoResult result) -> {

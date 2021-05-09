@@ -1,5 +1,6 @@
 package com.example.cs175_project;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
@@ -57,6 +58,7 @@ public class UploadPreviewActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_COVER_CHOOSE) {
                 Log.d(TAG, "UploadFinish");
+                setResult(Activity.RESULT_OK);
                 finish();
             }
         }

@@ -32,6 +32,7 @@ import java.util.concurrent.Executors;
 
 public class CameraActivity extends AppCompatActivity {
     final static String TAG = "CameraActivity";
+    final static int UPLOAD_VIDEO_REQUEST_CODE = 1001;
     final static long TOTAL_TIME = 10000;
     private long startTime;
     private PreviewView mPreviewView;
@@ -128,8 +129,8 @@ public class CameraActivity extends AppCompatActivity {
                         Log.d(TAG, "onSaved");
                         Intent intent = new Intent(CameraActivity.this, UploadPreviewActivity.class);
                         intent.putExtra("videoUri", outputFileResults.getSavedUri().toString());
-                        startActivity(intent);
-                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                        startActivityForResult(intent, UPLOAD_VIDEO_REQUEST_CODE);
+                        runOnUiThread(() -> getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE));
                     }
 
                     @Override
@@ -159,5 +160,13 @@ public class CameraActivity extends AppCompatActivity {
         mController.stopRecording();
     }
 
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == UPLOAD_VIDEO_REQUEST_CODE) {
+                finish();
+            }
+        }
+    }
 }
